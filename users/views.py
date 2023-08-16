@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile
 from .forms import customUserCreationForm, ProfileForm, SkillForm
+from .utils import searchProfiles, paginate_profiles
 
 # Create your views here.
 def loginpage(request):
@@ -58,8 +59,11 @@ def registeruser(request):
     context = {'page': page, 'form': form}
     return render(request, 'users/login_register.html', context)
 def profiles(request):
-    profiles = Profile.objects.all()
-    context = {'profiles': profiles}
+    profiles, search_query = searchProfiles(request)
+    custom_range, profiles = paginate_profiles(request, profiles, 3)
+
+    context = {'profiles': profiles, 'search_query': search_query,
+               'custom_range': custom_range}
     return render(request, 'users/profiles.html', context)
 
 def userprofile(request, pk):

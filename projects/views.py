@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Project
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from .models import Project, Tag
 from .forms import Projectform
+from .utils import searchProject, paginate_project
+
 
 
 # Create your views here.
@@ -29,8 +32,12 @@ def projects(request):
     # msg = 'hello, you are on the projects page'
     # page = 'projects_hmmm'
     # number = 11
-    projects = Project.objects.all()
-    context = {'projects': projects}
+    projects, search_query = searchProject(request)
+    custom_range, projects = paginate_project(request, projects, 4)
+
+
+    context = {'projects': projects, 'search_query': search_query,
+             'custom_range': custom_range}
     # context = {'page': page, 'number':number, 'projects':projectslist}
     return render(request, 'projects/projects.html', context)
 
