@@ -89,13 +89,13 @@
                         {% for review in project.review_set.all %}
                         {% if review.body %}
                         <div class="comment">
-                            <a href="">
+                            <a href="{% url 'users-profile' review.owner.id %}">
                                 <img class="avatar avatar--md" src="{{review.owner.profile_image.url}}" alt="user" />
                             </a>
 
 
                             <div class="comment__details">
-                                <a href=""
+                                <a href="{% url 'users-profile' review.owner.id %}"
                                     class="comment__author">{{review.owner.name}}</a>
                                 <p class="comment__info">{{review.body|linebreaksbr}}</p>
                             </div>
